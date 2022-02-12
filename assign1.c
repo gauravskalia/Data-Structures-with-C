@@ -1,13 +1,12 @@
 /*******************************************************************************************
-* File Name          : assign1.c
+* File Name          : assign1skeleton.c
 * Description        : Prog8130 - Assignment 1: Linked Lists
 *                      This program uses linked lists to hold and print a list of words
 *                      organized by order number assosciated with each word. Each word can
 *                      consist of maximum 30 characters.
 *
-* Author             : Gaurav Kalia 
-* Student ID         : 8710758
-* Date               : 29th January, 2022                
+* Author:              Gaurav Kalia
+* Date:                6th Febuary, 2021
 ********************************************************************************************/
 
 #include <stdio.h>
@@ -95,6 +94,7 @@ void main(void) {
     ptrHead = RemoveFromLinkedList(ptrHead, iData[2].name, iData[2].order);
 
     // now print out the list in order it is stored starting at head
+    printf("Final Output after Data inserted to Linked List is:\n");
     PrintLinkedList(ptrHead);
 }
 
@@ -108,8 +108,48 @@ void main(void) {
 LinkedListNodeDef *AddToLinkedList(LinkedListNodeDef *ptrHead, char *NameData, int DataOrder) {
     // put code in here to add the item(s) to the linked list
 
+    LinkedListNodeDef* newnode = (LinkedListNodeDef*)malloc(sizeof(LinkedListNodeDef));       //Dynamic Allocation of node
+    
+    newnode->order = DataOrder;
+    strcpy(newnode->NameData,NameData);
+    newnode->ptrNextNode =NULL;
+    if (ptrHead == NULL)
+      {
+        /* code */
+        return newnode;
+      }
+    struct LinkedListNode* head = ptrHead;                    // Sorting of the Data
+    LinkedListNodeDef* ptrpreNode = head;
+    while(head->ptrNextNode != NULL)
+    {
+      if(head->order == DataOrder)                           // Comparing the present node with Data Order
+      {
+        ptrpreNode->ptrNextNode =newnode;
+        newnode->ptrNextNode = head;
+        return ptrHead;
+      }
+      else if(head->order == DataOrder)                     // Comparing the present node with Data Order
+      {
+        LinkedListNodeDef* var = head->ptrNextNode;
+        head->ptrNextNode = var;
+        return ptrHead;
+      }
+      else{
+          ptrpreNode = head;
+          head = head->ptrNextNode;
+      }
+    }
+    if (head->order >DataOrder )                            
+    {
+        /* code */
+        ptrpreNode->ptrNextNode = newnode;
+        newnode->ptrNextNode =head;
+        return ptrHead;
+    }
+    head->ptrNextNode =newnode;
     return ptrHead;
 }
+
 
 // FUNCTION      : RemoveFromLinkedList()
 // DESCRIPTION   : This function takes an input of Data of 30 Char word and an order and 
@@ -120,7 +160,20 @@ LinkedListNodeDef *AddToLinkedList(LinkedListNodeDef *ptrHead, char *NameData, i
 // RETURNS       : possibly updated pointer to the head of the list
 LinkedListNodeDef* RemoveFromLinkedList(LinkedListNodeDef* ptrHead, char* NameData, int DataOrder) {
     // put code in here to add the item(s) to the linked list
-
+    
+    struct LinkedListNode* head = ptrHead;
+    LinkedListNodeDef* ptrpreNode = head;
+    while(head->ptrNextNode != NULL)
+    {
+      if ((head->order == DataOrder) & (strcmp(head->NameData,NameData) == 0))                //Comparing the Data order and Name Data
+      {
+          ptrpreNode->ptrNextNode = head->ptrNextNode;
+          free(head);
+          return ptrHead;
+      }
+      ptrpreNode = head;
+      head = head->ptrNextNode;
+    }
     return ptrHead;
 }
 
@@ -132,4 +185,11 @@ LinkedListNodeDef* RemoveFromLinkedList(LinkedListNodeDef* ptrHead, char* NameDa
 void PrintLinkedList(LinkedListNodeDef *ptrHead) {
     // put code in here to print the linked list out
 
+     struct LinkedListNode *temp;
+    temp = ptrHead;
+    while(temp != NULL)
+    {
+      printf("%s,%d\n",temp->NameData,temp->order);
+      temp = temp->ptrNextNode;
+    }
 }
